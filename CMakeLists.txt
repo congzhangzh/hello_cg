@@ -11,8 +11,11 @@ endif()
 
 project ("hello_cg")
 
+find_package(FreeGLUT CONFIG REQUIRED)
+
 # 将源代码添加到此项目的可执行文件。
 add_executable (hello_cg "hello_cg.cpp" "hello_cg.h")
+target_link_libraries(hello_cg PRIVATE $<IF:$<TARGET_EXISTS:FreeGLUT::freeglut>,FreeGLUT::freeglut,FreeGLUT::freeglut_static>)
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET hello_cg PROPERTY CXX_STANDARD 20)
