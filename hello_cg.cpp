@@ -15,10 +15,28 @@ int main(int argc, char** argv)
     glutDisplayFunc([]()
         {
             glClear(GL_COLOR_BUFFER_BIT);
+            glColor3f(1.0, 0, 0);
+            glRectf(-25, 25, 25,-25);
             glFlush();
         });
 
-    glClear(GL_COLOR_BUFFER_BIT);
+    glutReshapeFunc([](int w, int h)
+        {
+            glViewport(0, 0, w, h);
+            glMatrixMode(GL_PROJECTION);
+            glLoadIdentity();
+
+            auto aspectRatio = (float)w / (float)h;
+            if(w <= h)
+                glOrtho(-50, 50, -50 / aspectRatio, 50 / aspectRatio, -1, 1);
+            else
+                glOrtho(-50 * aspectRatio, 50 * aspectRatio, -50, 50, -1, 1);            
+
+            glMatrixMode(GL_MODELVIEW);
+            glLoadIdentity();
+        });
+        
+    glClearColor(0, 0, 1.0, 1);
     glFlush();
 
     glutMainLoop();
