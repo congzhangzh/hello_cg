@@ -1,8 +1,15 @@
 ﻿// hello_cg.cpp : 此文件包含 "main" 函数。程序执行将在此处开始并结束。
 //
 
+#include <functional>
 #include <iostream>
+#include <common/thunks.hpp>
 #include <gl/glut.h>
+
+using namespace lunaticpp;
+
+//#define Func2Callback(funcObj) thunk<&decltype(funcObj)::operator()>(&funcObj).func()
+#define AThunk(name, funcObj) thunk<&decltype(funcObj)::operator()> ##name(&funcObj)
 
 int main(int argc, char** argv)
 {
@@ -20,45 +27,60 @@ int main(int argc, char** argv)
     GLfloat xstep = 1.0f;
     GLfloat ystep = 1.0f;
 
-    // glutDisplayFunc([&]()
-    //     {
-    //         glClear(GL_COLOR_BUFFER_BIT);
-    //         glColor3f(1.0, 0, 0);
-    //         //glRectf(-25, 25, 25,-25);
-    //         //glFlush();
-    //         glRect(x1,y1,x1+resize, y1-rsize);
-    //         glutSwapBuffers();
-    //     });
+    GLfloat windowWidth;
+    GLfloat windowHeight;
 
-    glutReshapeFunc([](int w, int h)
+    auto funcDisply = [&]()
+        {
+            glClear(GL_COLOR_BUFFER_BIT);
+            glColor3f(1.0, 0, 0);
+            glRectf(x1, y1, x1 + rsize, y1 - rsize);        
+            glutSwapBuffers();
+        };
+    AThunk(thunkDisply, funcDisply);
+    glutDisplayFunc(
+        thunkDisply.func()
+    );
+
+    auto funcReshape = [&](int w, int h)
         {
             glViewport(0, 0, w, h);
             glMatrixMode(GL_PROJECTION);
             glLoadIdentity();
 
             auto aspectRatio = (float)w / (float)h;
-            if(w <= h)
+            if (w <= h)
                 glOrtho(-50, 50, -50 / aspectRatio, 50 / aspectRatio, -1, 1);
             else
-                glOrtho(-50 * aspectRatio, 50 * aspectRatio, -50, 50, -1, 1);            
+                glOrtho(-50 * aspectRatio, 50 * aspectRatio, -50, 50, -1, 1);
+
+            windowWidth = w;
+            windowHeight = h;
 
             glMatrixMode(GL_MODELVIEW);
             glLoadIdentity();
-        });
+        };
+    AThunk(thunkResape, funcReshape);
+	glutReshapeFunc(thunkResape.func());
 
-    // glutTimerFunc(33, [](int value)
-    //     {
-    //         x1 += xstep;
-    //         y1 += ystep;
-    //
-    //         if (x1 > 50 - rsize || x1 < -50)
-    //             xstep = -xstep;
-    //         if (y1 > 50 || y1 < -50 + rsize)
-    //             ystep = -ystep;
-    //
-    //         glutPostRedisplay();
-    //         glutTimerFunc(33, [](int value) {glutTimerFunc(33, [](int value) {}); }, 1);
-    //     }, 1);
+    std::function<void(int)> funcTimer;
+    AThunk(thunkTimer, funcTimer);
+
+    funcTimer = [&](int value)
+        {
+            x1 += xstep;
+            y1 += ystep;
+    
+            if (x1 > 50 - rsize || x1 < -50)
+                xstep = -xstep;
+            if (y1 > 50 || y1 < -50 + rsize)
+                ystep = -ystep;
+    
+            glutPostRedisplay();
+            glutTimerFunc(100, thunkTimer.func() , 1);
+        };    
+    glutTimerFunc(100, thunkTimer.func(), 1);
+
     glClearColor(0, 0, 1.0, 1);
     glFlush();
 

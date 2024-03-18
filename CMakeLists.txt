@@ -28,4 +28,7 @@ add_subdirectory(0_test)
 add_subdirectory(1_show_rect)
 add_subdirectory(2_bounce_animation)
 
+
+# Set MyExecutable as the startup project
+set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT hello_animation)
 # TODO: 如有需要，请添加测试并安装目标。
