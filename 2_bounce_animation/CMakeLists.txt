@@ -1,5 +1,5 @@
-﻿set(TARGET_NAME hello_rect)
-add_executable(${TARGET_NAME} "hello_rect.cpp" "hello_rect.h")
+﻿set(TARGET_NAME hello_animation)
+add_executable(${TARGET_NAME} "hello_animation.cpp" "hello_animation.h")
 target_link_libraries(${TARGET_NAME} PRIVATE $<IF:$<TARGET_EXISTS:FreeGLUT::freeglut>,FreeGLUT::freeglut,FreeGLUT::freeglut_static>)
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)

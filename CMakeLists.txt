@@ -15,6 +15,11 @@ enable_testing()
 
 find_package(FreeGLUT CONFIG REQUIRED)
 
+find_package(GTest CONFIG REQUIRED)
+# target_link_libraries(main PRIVATE GTest::gtest GTest::gtest_main GTest::gmock GTest::gmock_main)
+# add_test(AllTestsInMain main)
+
 add_subdirectory(1_show_rect)
+add_subdirectory(2_bounce_animation)
 
 # TODO: 如有需要，请添加测试并安装目标。
