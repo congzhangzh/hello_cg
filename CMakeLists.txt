@@ -15,10 +15,16 @@ enable_testing()
 
 find_package(FreeGLUT CONFIG REQUIRED)
 
-find_package(GTest CONFIG REQUIRED)
+# find_package(gtest CONFIG REQUIRED)
 # target_link_libraries(main PRIVATE GTest::gtest GTest::gtest_main GTest::gmock GTest::gmock_main)
 # add_test(AllTestsInMain main)
 
+find_package(GTest REQUIRED)
+find_package(boost REQUIRED)
+
+include_directories(${CMAKE_SOURCE_DIR}/include)
+
+add_subdirectory(0_test)
 add_subdirectory(1_show_rect)
 add_subdirectory(2_bounce_animation)
 

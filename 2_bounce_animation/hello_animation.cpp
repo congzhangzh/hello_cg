@@ -13,13 +13,22 @@ int main(int argc, char** argv)
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA);
     glutCreateWindow("Simple");
 
-    glutDisplayFunc([]()
-        {
-            glClear(GL_COLOR_BUFFER_BIT);
-            glColor3f(1.0, 0, 0);
-            glRectf(-25, 25, 25,-25);
-            glFlush();
-        });
+    GLfloat x1 = 0.0f;
+    GLfloat y1 = 0.0f;
+    GLfloat rsize = 25.0f;
+
+    GLfloat xstep = 1.0f;
+    GLfloat ystep = 1.0f;
+
+    // glutDisplayFunc([&]()
+    //     {
+    //         glClear(GL_COLOR_BUFFER_BIT);
+    //         glColor3f(1.0, 0, 0);
+    //         //glRectf(-25, 25, 25,-25);
+    //         //glFlush();
+    //         glRect(x1,y1,x1+resize, y1-rsize);
+    //         glutSwapBuffers();
+    //     });
 
     glutReshapeFunc([](int w, int h)
         {
@@ -37,6 +46,19 @@ int main(int argc, char** argv)
             glLoadIdentity();
         });
 
+    // glutTimerFunc(33, [](int value)
+    //     {
+    //         x1 += xstep;
+    //         y1 += ystep;
+    //
+    //         if (x1 > 50 - rsize || x1 < -50)
+    //             xstep = -xstep;
+    //         if (y1 > 50 || y1 < -50 + rsize)
+    //             ystep = -ystep;
+    //
+    //         glutPostRedisplay();
+    //         glutTimerFunc(33, [](int value) {glutTimerFunc(33, [](int value) {}); }, 1);
+    //     }, 1);
     glClearColor(0, 0, 1.0, 1);
     glFlush();
 
